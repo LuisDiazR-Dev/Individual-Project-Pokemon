@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 
 // ? Components
+import Cards from './Cards'
 
 // ? Actions
 import { getAllPokemons } from '../Redux/Action'
@@ -16,26 +17,14 @@ const Home = () => {
 		dispatch(getAllPokemons())
 	}, [dispatch])
 
-	console.log(allPokemon)
+	// console.log(allPokemon)
 	// ejecutar la función que me genera el dispatch que me trae el estado del store/reducer
 
 	return (
 		<div>
 			<h2>Esto es Home y están todos los pokemons</h2>
 			<div>
-				{searchedPokemon ? (
-					<div key={searchedPokemon.id}>
-						<h3>{searchedPokemon.name}</h3>
-						<img src={searchedPokemon.image} alt={searchedPokemon.name} />
-					</div>
-				) : (
-					allPokemon.map((pokemon) => (
-						<div key={pokemon.id}>
-							<h3>{pokemon.name}</h3>
-							<img src={pokemon.image} alt={pokemon.name} />
-						</div>
-					))
-				)}
+				<Cards allPokemon={allPokemon} searchedPokemon={searchedPokemon} />
 			</div>
 		</div>
 	)

@@ -35,8 +35,9 @@ export default NavBar
 
 // ? Styles
 const NavBarSection = styled.section`
-	border: 1px solid rgba(0, 0, 0, 0.178);
-
+	border: 1px solid #fafafa48;
+	border-radius: 20px;
+	padding: 0 12px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
