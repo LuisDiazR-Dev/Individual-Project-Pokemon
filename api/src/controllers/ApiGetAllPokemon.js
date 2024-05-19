@@ -2,8 +2,8 @@ const axios = require('axios')
 
 const getPokemonDetails = async (url) => {
 	try {
-			const response = await axios.get(url);
-			const data = response.data;
+			const response = await axios.get(url)
+			const data = response.data
 			return {
 					src: "API",
 					id: data.id,
@@ -18,81 +18,82 @@ const getPokemonDetails = async (url) => {
 					height: data.height,
 					weight: data.weight,
 					types: data.types.map(typeInfo => typeInfo.type.name),
-			};
+			}
 	} catch (error) {
 			console.error(`Error al obtener detalles de ${url}: ${error.message}`);
-			return null;
+			return null
 	}
 };
 
 
 
 const ApiGetAllPokemon = async (req, res) => {
-	const URL = 'https://pokeapi.co/api/v2/pokemon';
 
 	try {
-			const result = await axios.get(URL);
+			const result = await axios.get('https://pokeapi.co/api/v2/pokemon')
 			// const pokemonList = result.data.results.slice(0, 20); // Obtener solo los primeros 20
 			const pokemonList = result.data.results
 
-			// Use Promise.all to fetch details for all Pokemon concurrently
-			const pokemonDetails = await Promise.all(pokemonList.map(pokemon => getPokemonDetails(pokemon.url)));
+			// Use Promise.all para solicitudes en paralelo
+			const pokemonDetails = await Promise.all(pokemonList.map(pokemon => getPokemonDetails(pokemon.url)))
 
-			// Filter out any null values (in case of errors)
-			const validPokemonDetails = pokemonDetails.filter(details => details !== null);
-
-			res.status(200).json(validPokemonDetails);
+			// en caso de errores
+			return pokemonDetails.filter(details => details !== null)
+			
+			// const validPokemonDetails = pokemonDetails.filter(details => details !== null);
+			// res.status(200).json(validPokemonDetails);
 	} catch (error) {
-			res.status(500).json({ message: `Sin datos en la PokeDex. Error: ${error.message}` });
+		console.error(`Error al obtener la lista de Pokémon: ${error.message}`);
+		throw new Error('Error al obtener la lista de Pokémon');
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const ApiGetAllPokemon2 = async (request, response)=>{
-
-	// const { offset = 0, limit = 20 } = req.query;
-	// const URL = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
-
-	const URL = 'https://pokeapi.co/api/v2/pokemon'
-
-	try {
-		const result = await axios.get(`${URL}`)
-
-		const pokemonList = result.data.results.name
-
-
-
-		console.log(pokemonList)
-
-
-		response.status(200).json(pokemonList)
-
-	} catch (error) {
-		response.status(500).json(`Sin datos en la PokeDex. Error: ${error.message}`);		
-	}
-}
 module.exports = ApiGetAllPokemon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const ApiGetAllPokemon2 = async (request, response)=>{
+
+// 	// const { offset = 0, limit = 20 } = req.query;
+// 	// const URL = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
+
+// 	const URL = 'https://pokeapi.co/api/v2/pokemon'
+
+// 	try {
+// 		const result = await axios.get(`${URL}`)
+
+// 		const pokemonList = result.data.results.name
+
+
+
+// 		console.log(pokemonList)
+
+
+// 		response.status(200).json(pokemonList)
+
+// 	} catch (error) {
+// 		response.status(500).json(`Sin datos en la PokeDex. Error: ${error.message}`);		
+// 	}
+// }
