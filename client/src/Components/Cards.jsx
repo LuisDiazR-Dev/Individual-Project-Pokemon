@@ -8,6 +8,7 @@ const Cards = ({ allPokemon, searchedPokemon }) => {
 		<CardsDiv>
 			{searchedPokemon ? (
 				<Card
+					src={searchedPokemon.src}
 					key={searchedPokemon.id}
 					id={searchedPokemon.id}
 					name={searchedPokemon.name}
@@ -23,6 +24,7 @@ const Cards = ({ allPokemon, searchedPokemon }) => {
 			) : (
 				allPokemon.map((pokemon) => (
 					<Card
+						src={pokemon.src}
 						key={pokemon.id}
 						id={pokemon.id}
 						name={pokemon.name}

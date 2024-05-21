@@ -17,14 +17,16 @@ const Card = ({
 }) => {
 	return (
 		<CardDiv className="card">
-			<div>
+			<div className="header">
 				<h2>{name}</h2>
+
+				<span className="src">{src === 'API' ? 'API' : 'BD'}</span>
 			</div>
 			{/* <Link to={`/detail/${id}`}> <img src={image} alt={name} /> </Link> */}
 			<Link to={`/`}>
 				<img src={image} alt={name} />{' '}
 			</Link>
-			<div>
+			<div className="footer">
 				<h3>Tipo</h3>
 
 				{types.map((type, index) => (
@@ -44,48 +46,50 @@ const CardDiv = styled.div`
 	border-radius: 20px;
 	margin: 4px auto;
 
-	img {
-		width: 256px;
-		height: 200px;
-	}
 	h3,
 	h2 {
 		margin: 0;
 		padding: 0;
 	}
+
+	img {
+		width: 256px;
+		height: 200px;
+		padding: 12px 0;
+	}
 	span {
-		display: inline-flex;
-		padding: 12px 12px;
+		padding: 0 12px;
 	}
 
 	&:hover {
 		cursor: pointer;
 		background-color: #042e53;
 	}
+
+	div.header {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+
+		h2 {
+			width: 80%;
+		}
+	}
+
+	span.src {
+		border-left: 1px solid #fafafa48;
+		border-bottom: 1px solid #fafafa48;
+		border-radius: 0 20px 0 0;
+		width: 20%;
+		padding: 6px 0;
+	}
+
+	div.footer {
+		border-top: 1px solid #fafafa48;
+		padding-bottom: 4px;
+
+		span {
+			padding: 0 12px;
+		}
+	}
 `
-
-// display: flex;
-// 	flex-direction: column;
-// 	justify-content: space-between;
-// 	text-align: center;
-// 	width: 256px;
-// 	height: 256px;
-// 	margin: 8px auto;
-// 	overflow: hidden;
-// 	border-radius: 10px;
-// 	border: 8px #00abc2 ridge;
-
-// 	div:nth-child(1) {
-// 		display: flex;
-// 		/* border: 1px red solid; */
-// 		justify-content: space-between;
-
-// 		button {
-// 			width: 33%;
-// 			font-size: 1.2em;
-// 		}
-// 	}
-// 	img {
-// 		max-width: 100%;
-// 		height: auto;
-// 	}
