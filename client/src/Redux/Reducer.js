@@ -1,6 +1,6 @@
 const initialState = {
   pokemonList: [],
-  types: [],
+  types: ['Tipo A', 'Tipo B', 'Tipo C'],
   searchedPokemon: null
 }
 

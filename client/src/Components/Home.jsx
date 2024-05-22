@@ -17,7 +17,7 @@ const Home = () => {
 		dispatch(getAllPokemons())
 	}, [dispatch])
 
-	// console.log(allPokemon)
+	console.log(allPokemon)
 	// ejecutar la función que me genera el dispatch que me trae el estado del store/reducer
 
 	return (

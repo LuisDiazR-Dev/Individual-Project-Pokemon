@@ -8,8 +8,6 @@ const getPokemonDetails = async (url) => {
 					src: "API",
 					id: data.id,
 					name: data.name,
-					// image: data.sprites.front_default,
-					// image: data.sprites.other.official-artwork.front_shiny,
 					image: data.sprites.other.dream_world.front_default,
 					hp: data.stats.find(stat => stat.stat.name === 'hp').base_stat,
 					attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,

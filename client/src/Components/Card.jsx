@@ -3,17 +3,17 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 const Card = ({
-	src,
-	id,
-	name,
-	image,
-	hp,
-	attack,
-	defense,
-	speed,
-	heigth,
-	weigth,
-	types,
+	src = 'API',
+	id = '',
+	name = 'Unknown',
+	image = '',
+	hp = 0,
+	attack = 0,
+	defense = 0,
+	speed = 0,
+	height = 0,
+	weight = 0,
+	types = [],
 }) => {
 	return (
 		<CardDiv className="card">
@@ -29,10 +29,11 @@ const Card = ({
 			<div className="footer">
 				<h3>Tipo</h3>
 
-				{types.map((type, index) => (
-					// <button key={index}>{type}</button>
-					<span key={index}>{type}</span>
-				))}
+				{Array.isArray(types) && types.length > 0 ? (
+					types.map((type, index) => <span key={index}>{type}</span>)
+				) : (
+					<span>No types available</span>
+				)}
 			</div>
 		</CardDiv>
 	)

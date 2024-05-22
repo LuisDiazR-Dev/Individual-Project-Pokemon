@@ -24,9 +24,11 @@ const NavBar = () => {
 
 			<div className="nav">
 				<NavBarSearch />
+				<Link to={'/agregar'}>
+					<button>Agregar</button>
+				</Link>
 
-				<button>Agregar</button>
-				<button onClick={logOut}>Log out</button>
+				<button onClick={logOut}>LogOut</button>
 			</div>
 		</NavBarSection>
 	)
