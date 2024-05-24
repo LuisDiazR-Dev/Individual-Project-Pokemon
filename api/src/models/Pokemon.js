@@ -5,9 +5,9 @@ module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('Pokemon', {
     src: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: 'DB'
+      defaultValue: true // true indicating that it is from the DB
     },
     id: {
       primaryKey: true,

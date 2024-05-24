@@ -5,6 +5,7 @@ import { useLocation, Routes, Route } from 'react-router-dom' //luego de instala
 import './App.css'
 import NavBar from './Components/NavBar.jsx'
 import { Home } from './Components/Home.jsx'
+import Detail from './Components/Detail.jsx'
 import FormAddPokemonDB from './Components/FormAddPokemonDB.jsx'
 
 // *
@@ -20,13 +21,13 @@ function App() {
 
 				<Routes>
 					<Route path="/pokemons" element={<Home />} />
+					<Route path="/pokemons/detail/:id" element={<Detail />} />
 					<Route path="/agregar" element={<FormAddPokemonDB />} />
 
 					{/* <Route path="/" element={<FormLogin login={login} />} /> */}
 					{/* <Route path="/favorites" element={<Favorites />} /> */}
 					{/* <Route path="/about" element={<About />} /> */}
 					{/* <Route path="/account" element={<Account />} /> */}
-					{/* <Route path="/detail/:id" element={<Detail />} /> */}
 				</Routes>
 			</div>
 		</>

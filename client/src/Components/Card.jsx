@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 const Card = ({
-	src = 'API',
+	src = false,
 	id = '',
 	name = 'Unknown',
 	image = '',
@@ -20,10 +20,10 @@ const Card = ({
 			<div className="header">
 				<h2>{name}</h2>
 
-				<span className="src">{src === 'API' ? 'API' : 'BD'}</span>
+				<span className="src">{src === false ? 'API' : 'BD'}</span>
 			</div>
 			{/* <Link to={`/detail/${id}`}> <img src={image} alt={name} /> </Link> */}
-			<Link to={`/`}>
+			<Link to={`/pokemons/detail/${id}`}>
 				<img src={image} alt={name} />{' '}
 			</Link>
 			<div className="footer">
@@ -40,12 +40,15 @@ const Card = ({
 }
 
 export default Card
+export { CardDiv }
 
 // ? styled
 const CardDiv = styled.div`
 	border: 1px solid #fafafa48;
 	border-radius: 20px;
 	margin: 4px auto;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	/* max-width: 600px; */
 
 	h3,
 	h2 {
@@ -74,6 +77,26 @@ const CardDiv = styled.div`
 
 		h2 {
 			width: 80%;
+		}
+	}
+	div.image {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	div.stats {
+		display: flex;
+		flex-direction: column;
+		gap: 20px; /* Espacio entre cada stat */
+		background-color: #ffffff;
+		border: 1px solid #042e5329;
+		padding: 10px;
+		border-radius: 20px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+		span {
+			font-weight: bold;
+			color: #333;
 		}
 	}
 

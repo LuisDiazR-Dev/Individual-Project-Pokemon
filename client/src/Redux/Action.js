@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// ? ALl
 const getAllPokemons = () => {
   const endpoint = 'http://localhost:3001/pokemons'
 
@@ -16,6 +17,7 @@ const getAllPokemons = () => {
   }
 }
 
+// ? Id
 const searchPokemonById = (id) => {
   const endpoint = `http://localhost:3001/pokemons/${id}`
 

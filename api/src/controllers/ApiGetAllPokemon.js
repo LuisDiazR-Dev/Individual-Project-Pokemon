@@ -5,16 +5,9 @@ const getPokemonDetails = async (url) => {
 			const response = await axios.get(url)
 			const data = response.data
 			return {
-					src: "API",
 					id: data.id,
 					name: data.name,
 					image: data.sprites.other.dream_world.front_default,
-					hp: data.stats.find(stat => stat.stat.name === 'hp').base_stat,
-					attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
-					defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
-					speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
-					height: data.height,
-					weight: data.weight,
 					types: data.types.map(typeInfo => typeInfo.type.name),
 			}
 	} catch (error) {
@@ -38,8 +31,6 @@ const ApiGetAllPokemon = async (req, res) => {
 			// en caso de errores
 			return pokemonDetails.filter(details => details !== null)
 			
-			// const validPokemonDetails = pokemonDetails.filter(details => details !== null);
-			// res.status(200).json(validPokemonDetails);
 	} catch (error) {
 		console.error(`Error al obtener la lista de Pokémon: ${error.message}`);
 		throw new Error('Error al obtener la lista de Pokémon');
@@ -51,19 +42,19 @@ module.exports = ApiGetAllPokemon
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// const arr = {
+// 	src: "API",
+// 	id: data.id,
+// 	name: data.name,
+// 	image: data.sprites.other.dream_world.front_default,
+// 	hp: data.stats.find(stat => stat.stat.name === 'hp').base_stat,
+// 	attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
+// 	defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
+// 	speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
+// 	height: data.height,
+// 	weight: data.weight,
+// 	types: data.types.map(typeInfo => typeInfo.type.name),
+// }
 
 
 
