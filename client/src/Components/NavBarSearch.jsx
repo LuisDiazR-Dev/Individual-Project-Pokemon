@@ -1,27 +1,20 @@
-// ? Hooks
-import { useState } from 'react' //inicializando estado
+import { useState } from 'react'
+
 import { useDispatch } from 'react-redux'
+import { searchPokemonByName } from '../Redux/Action'
 
-// ? components
-
-import { searchPokemonById } from '../Redux/Action'
-
-// *
 const NavBarSearch = () => {
-	const [id, setId] = useState('') //definiendo estado en relación a un id
-	//id como referencia pero puede ser cualquier nombre
-
 	const dispatch = useDispatch()
+	const [name, setName] = useState('')
 
 	const handleChange = (event) => {
-		setId(event.target.value)
+		setName(event.target.value.toLowerCase())
 	}
 
-	// * search Pokemon
 	const handleOnClick = () => {
-		if (id) {
-			dispatch(searchPokemonById(id))
-			setId('')
+		if (name) {
+			dispatch(searchPokemonByName(name))
+			setName('')
 		}
 	}
 
@@ -30,7 +23,7 @@ const NavBarSearch = () => {
 			<input
 				style={{ height: '1.5rem' }}
 				type="search"
-				value={id}
+				value={name}
 				onChange={handleChange}
 				required
 			/>
@@ -38,4 +31,5 @@ const NavBarSearch = () => {
 		</div>
 	)
 }
+
 export default NavBarSearch

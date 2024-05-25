@@ -29,9 +29,38 @@ const searchPokemonById = (id) => {
         payload: data,
       })
     } catch (error) {
-      console.error('Error buscando Pokemon:', error)
+      console.error('Error buscando Pokemon por ID:', error)
     }
   }
 }
 
-export { getAllPokemons, searchPokemonById }
+// ? name
+const searchPokemonByName = (name) => {
+  const endpoint = `http://localhost:3001/pokemons/name?name=${name}`
+
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(endpoint)
+      dispatch({
+        type: 'SEARCH_POKEMON_NAME',
+        payload: data,
+      })
+    } catch (error) {
+      console.error('Error buscando Pokemon por nombre:', error);
+      window.alert(`Error buscando Pokemon por nombre: ${error.message}`);
+
+    }
+  }
+}
+
+// ? clear Search
+const clearSearch = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CLEAR_SEARCH',
+    });
+  };
+};
+
+
+export { getAllPokemons, searchPokemonById, searchPokemonByName, clearSearch  }

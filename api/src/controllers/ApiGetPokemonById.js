@@ -1,7 +1,9 @@
+// ! para el componente detail
+
 const axios = require('axios');
 const { Pokemon, Type } = require('../db');
 
-// Función para obtener los detalles del Pokémon desde la API
+
 const getPokemonDetailsFromAPI = async (id) => {
   try {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -25,9 +27,6 @@ const getPokemonDetailsFromAPI = async (id) => {
   }
 };
 
-
-
-// Manejador para obtener los detalles del Pokémon por ID
 const getPokemonById = async (req, res) => {
   const { id } = req.params;
 	const source = isNaN(id) ? "DB" : "API"
@@ -45,7 +44,7 @@ const getPokemonById = async (req, res) => {
 
       if (pokemonFromDB) {
         return res.json({
-          src: true, // true indicating that it is from the DB
+          src: true,
           id: pokemonFromDB.id,
           name: pokemonFromDB.name,
           image: pokemonFromDB.image,
