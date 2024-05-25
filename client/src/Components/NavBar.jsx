@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 
 // ? components
 import NavBarSearch from './NavBarSearch'
+import { useDispatch } from 'react-redux'
+// import { getAllPokemons } from '../Redux/Action'
 
 // *
 const NavBar = () => {
@@ -13,11 +15,17 @@ const NavBar = () => {
 		if (event) navigate('/')
 	}
 
+	// * reiniciar Home
+	const dispatch = useDispatch()
+
+	const clearSearchHandler = () => {
+		dispatch(clearSearch())
+	}
+
 	return (
 		<NavBarSection>
 			<div>
-				<Link to={'/pokemons'}>
-					{/* todo:  para que se reinicie home cuando de demos click, debe ejecutarse el dispatch */}
+				<Link to={'/pokemons'} onClick={clearSearchHandler}>
 					<h1>PokeApp</h1>
 				</Link>
 			</div>
@@ -33,6 +41,7 @@ const NavBar = () => {
 		</NavBarSection>
 	)
 }
+
 export default NavBar
 
 // ? Styles
