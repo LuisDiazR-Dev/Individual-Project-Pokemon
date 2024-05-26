@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
+import { getTypes } from '../Redux/Action'
 
 const AddPokemonForm = () => {
 	const dispatch = useDispatch()
 	const allTypes = useSelector((state) => state.types)
 
-	// * para saber que datos se están recopilando
+	useEffect(() => {
+		dispatch(getTypes())
+	}, [dispatch])
+
 	const [formData, setFormData] = useState({
 		name: '',
-		image:
-			'https://raw.githubusercontent.com/LuisDiazR-Dev/Individual-Project-Pokemon/main/pokemon.png',
+		image: '',
 		hp: '',
 		attack: '',
 		defense: '',
@@ -23,16 +26,6 @@ const AddPokemonForm = () => {
 
 	const [selectedTypes, setSelectedTypes] = useState([])
 	const [isOtherType, setIsOtherType] = useState(false)
-
-	useEffect(() => {
-		// Fetch all types from the backend and dispatch them to the Redux store
-		axios
-			.get('http://localhost:3001/types')
-			.then((response) => {
-				dispatch({ type: 'SET_TYPES', payload: response.data })
-			})
-			.catch((error) => console.error('Error fetching types:', error))
-	}, [dispatch])
 
 	const handleChange = (event) => {
 		setFormData({
@@ -92,7 +85,7 @@ const AddPokemonForm = () => {
 			return false
 		}
 
-		if (!urlPattern.test(formData.image)) {
+		if (formData.image && !urlPattern.test(formData.image)) {
 			alert('Por favor ingresa una URL válida para la imagen.')
 			return false
 		}
@@ -137,8 +130,7 @@ const AddPokemonForm = () => {
 				// Reset form
 				setFormData({
 					name: '',
-					image:
-						'https://raw.githubusercontent.com/LuisDiazR-Dev/Individual-Project-Pokemon/main/pokemon.png',
+					image: '',
 					hp: '',
 					attack: '',
 					defense: '',
@@ -272,8 +264,8 @@ const AddPokemonForm = () => {
 				<select name="types" onChange={handleSelectType}>
 					<option value="">Seleccione un tipo</option>
 					{allTypes.map((type) => (
-						<option key={type} value={type}>
-							{type}
+						<option key={type.id} value={type.name}>
+							{type.name}
 						</option>
 					))}
 					<option value="other">Otro</option>

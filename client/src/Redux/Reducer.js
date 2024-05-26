@@ -1,6 +1,7 @@
 const initialState = {
   pokemonList: [],
-  types: ['Tipo A', 'Tipo B', 'Tipo C'],
+  // types: ['Tipo A', 'Tipo B', 'Tipo C'],
+  types: [],
   searchedPokemon: []
 }
 
@@ -20,6 +21,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         searchedPokemon: [], // Reiniciar el estado de searchedPokemon
+      }
+      case 'GET_TYPES':
+      return {
+        ...state,
+        types: action.payload
       }
     default:
       return state

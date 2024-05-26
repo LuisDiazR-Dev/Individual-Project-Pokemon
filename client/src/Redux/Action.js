@@ -62,5 +62,24 @@ const clearSearch = () => {
   };
 };
 
+// ? types
+const getTypes = () => {
+  const endpoint = `http://localhost:3001/types`
 
-export { getAllPokemons, searchPokemonById, searchPokemonByName, clearSearch  }
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(endpoint)
+      dispatch({
+        type: 'GET_TYPES',
+        payload: data,
+      })
+    } catch (error) {
+      console.error('Error buscando tipos de Pokémon:', error)
+      window.alert(`Error buscando tipos de Pokémon: ${error.message}`)
+    }
+  }
+}
+
+
+
+export { getAllPokemons, searchPokemonById, searchPokemonByName, clearSearch, getTypes  }

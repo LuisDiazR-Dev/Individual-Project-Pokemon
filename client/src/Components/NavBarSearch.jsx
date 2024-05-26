@@ -1,10 +1,13 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useDispatch } from 'react-redux'
 import { searchPokemonByName } from '../Redux/Action'
 
 const NavBarSearch = () => {
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
+
 	const [name, setName] = useState('')
 
 	const handleChange = (event) => {
@@ -17,6 +20,9 @@ const NavBarSearch = () => {
 			setName('')
 		}
 	}
+	const searchedPokemon = (event) => {
+		if (event) navigate('/pokemons')
+	}
 
 	return (
 		<div>
@@ -27,7 +33,7 @@ const NavBarSearch = () => {
 				onChange={handleChange}
 				required
 			/>
-			<button onClick={handleOnClick}>Buscar</button>
+			<button onClick={(searchedPokemon, handleOnClick)}>Buscar</button>
 		</div>
 	)
 }

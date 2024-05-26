@@ -22,17 +22,9 @@ const NavBar = () => {
 		dispatch(clearSearch())
 	}
 
-	// * reiniciar Home
-	const dispatch = useDispatch()
-
-	const clearSearchHandler = () => {
-		dispatch(clearSearch())
-	}
-
 	return (
 		<NavBarSection>
 			<div>
-				<Link to={'/pokemons'} onClick={clearSearchHandler}>
 				<Link to={'/pokemons'} onClick={clearSearchHandler}>
 					<h1>PokeApp</h1>
 				</Link>
@@ -40,6 +32,7 @@ const NavBar = () => {
 
 			<div className="nav">
 				<NavBarSearch />
+
 				<Link to={'/agregar'}>
 					<button>Agregar</button>
 				</Link>
@@ -49,7 +42,6 @@ const NavBar = () => {
 		</NavBarSection>
 	)
 }
-
 
 export default NavBar
 
