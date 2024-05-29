@@ -1,7 +1,9 @@
+import axios from 'axios'
+import styled from 'styled-components'
+
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
-import { getTypes } from '../Redux/Action'
+import { getTypes, getAllPokemons } from '../Redux/Action'
 
 const AddPokemonForm = () => {
 	const dispatch = useDispatch()
@@ -58,16 +60,16 @@ const AddPokemonForm = () => {
 		setSelectedTypes(selectedTypes.filter((value) => value !== type))
 	}
 
-	const handleImageUpload = (event) => {
-		const file = event.target.files[0]
-		if (file) {
-			const reader = new FileReader()
-			reader.onloadend = () => {
-				setFormData({ ...formData, image: reader.result })
-			}
-			reader.readAsDataURL(file)
-		}
-	}
+	// const handleImageUpload = (event) => {
+	// 	const file = event.target.files[0]
+	// 	if (file) {
+	// 		const reader = new FileReader()
+	// 		reader.onloadend = () => {
+	// 			setFormData({ ...formData, image: reader.result })
+	// 		}
+	// 		reader.readAsDataURL(file)
+	// 	}
+	// }
 
 	const validateForm = () => {
 		const urlPattern = new RegExp(
@@ -115,6 +117,7 @@ const AddPokemonForm = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
+		dispatch(getAllPokemons())
 		const isValid = validateForm()
 		if (!isValid) return
 
@@ -122,11 +125,25 @@ const AddPokemonForm = () => {
 			...formData,
 			types: selectedTypes,
 		}
+		// Verificar los datos antes de enviar
+		console.log('Data to submit:', dataToSubmit)
 
 		axios
-			.post('http://localhost:3001/pokemons', dataToSubmit)
+			.post('http://localhost:3001/agregar', dataToSubmit)
 			.then((response) => {
 				console.log('Pokemon added:', response.data)
+				window.alert(`${formData.name} agregado a la Base de Datos`)
+
+				// axios
+				// 	.post('http://localhost:3001/agregar', dataToSubmit, {
+				// 		headers: {
+				// 			'Content-Type': 'application/json',
+				// 		},
+				// 	})
+				// 	.then((response) => {
+				// 		console.log('Pokemon added:', response.data)
+				// 		window.alert(`${formData.name} agregado a la Base de Datos`)
+
 				// Reset form
 				setFormData({
 					name: '',
@@ -147,34 +164,34 @@ const AddPokemonForm = () => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<FormStyled onSubmit={handleSubmit}>
+			<div>
+				<h2>Agrega Nuevo Pokemon</h2>
+			</div>
 			<div>
 				<label>Nombre</label>
 				<input
 					type="text"
 					name="name"
-					placeholder="Nombre"
 					value={formData.name}
 					onChange={handleChange}
 				/>
 			</div>
 			<div>
-				<label>Imagen (URL o Cargar)</label>
+				<label>URL de la imagen</label>
 				<input
 					type="text"
 					name="image"
-					placeholder="URL de la imagen"
 					value={formData.image}
 					onChange={handleChange}
 				/>
-				<input type="file" accept="image/*" onChange={handleImageUpload} />
+				{/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
 			</div>
 			<div>
 				<label>Vida</label>
 				<input
 					type="number"
 					name="hp"
-					placeholder="Vida"
 					value={formData.hp}
 					onChange={handleChange}
 				/>
@@ -187,7 +204,6 @@ const AddPokemonForm = () => {
 				<input
 					type="number"
 					name="attack"
-					placeholder="Ataque"
 					value={formData.attack}
 					onChange={handleChange}
 				/>
@@ -203,7 +219,6 @@ const AddPokemonForm = () => {
 				<input
 					type="number"
 					name="defense"
-					placeholder="Defensa"
 					value={formData.defense}
 					onChange={handleChange}
 				/>
@@ -259,7 +274,7 @@ const AddPokemonForm = () => {
 					Random
 				</button>
 			</div>
-			<div>
+			<div className="tipos">
 				<label>Tipos</label>
 				<select name="types" onChange={handleSelectType}>
 					<option value="">Seleccione un tipo</option>
@@ -271,7 +286,7 @@ const AddPokemonForm = () => {
 					<option value="other">Otro</option>
 				</select>
 				{isOtherType && (
-					<div>
+					<div className="newType">
 						<label>Nuevo Tipo</label>
 						<input
 							type="text"
@@ -295,16 +310,102 @@ const AddPokemonForm = () => {
 				)}
 				{selectedTypes.map((type) => (
 					<div key={type}>
-						<span>{type}</span>
-						<button type="button" onClick={() => handleRemoveType(type)}>
-							X
+						<span className="itemType">{type}</span>
+						<button
+							className="remove"
+							type="button"
+							onClick={() => handleRemoveType(type)}
+						>
+							❌
 						</button>
 					</div>
 				))}
 			</div>
-			<button type="submit">Crear Pokémon</button>
-		</form>
+			<button className="submit" type="submit">
+				Crear Pokémon
+			</button>
+		</FormStyled>
 	)
 }
 
 export default AddPokemonForm
+
+const FormStyled = styled.form`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 600px;
+	margin: auto;
+	margin-top: 50px;
+	border: 1px solid #fafafa48;
+	border-radius: 20px;
+	text-align: left;
+	div h2 {
+		text-align: center;
+	}
+
+	div {
+		width: 360px;
+	}
+	label {
+		display: block;
+		margin-top: 24px;
+	}
+	input {
+		display: inline-flex;
+		background-color: transparent;
+		padding: 5px;
+
+		width: 70%;
+		/* height: 16px; */
+
+		border: none; /* Elimina todos los bordes */
+		outline: none;
+		border-bottom: 2px solid #fafafa48;
+
+		&:focus {
+			border-bottom-color: black; /* Mantiene el borde negro al enfocar el input */
+		}
+	}
+	.tipos {
+		display: flex;
+		flex-direction: column;
+		text-align: left;
+
+		/* border: 1px solid black; */
+		label {
+			padding-bottom: 12px;
+		}
+		select {
+			height: 2em;
+			margin-bottom: 1em;
+		}
+	}
+	.newType {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding-bottom: 24px;
+	}
+	.remove {
+		padding: 0;
+		border-radius: 50%;
+		margin-left: 12px;
+		background-color: transparent;
+		border: none;
+		transition: transform 0.3s ease;
+
+		&:hover {
+			transform: scale(1.1);
+			border: 1px solid #fafafa48;
+		}
+	}
+	.submit {
+		margin: 24px 0;
+	}
+	.itemType {
+		padding: 24px 0;
+		margin: 24px 0;
+	}
+`

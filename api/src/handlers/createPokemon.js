@@ -6,8 +6,7 @@ const createPokemonDB = async (req, res) => {
   try {
     // Crear el nuevo Pokémon
     const newPokemon = await Pokemon.create({ 
-      name, 
-      image, 
+      name,       
       hp, 
       attack, 
       defense, 
@@ -15,6 +14,10 @@ const createPokemonDB = async (req, res) => {
       height, 
       weight 
     });
+    
+    if (image) {
+      newPokemon.image = image;
+    }
 
     // Encontrar o crear los tipos y asociarlos con el nuevo Pokémon
     if (types && types.length > 0) {

@@ -22,9 +22,9 @@ module.exports = (sequelize) => {
     image: {
       type: DataTypes.STRING, // STRING para la URL de la imagen
       defaultValue: 'https://raw.githubusercontent.com/LuisDiazR-Dev/Individual-Project-Pokemon/main/pokemon.png',
-      validate: {
-        isUrl: true, // Validación para asegurarse de que sea una URL
-      },
+      // validate: {
+      //   isUrl: true, // Validación para asegurarse de que sea una URL
+      // },
     },
     hp: {
       type: DataTypes.INTEGER,
