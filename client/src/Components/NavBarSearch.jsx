@@ -17,12 +17,13 @@ const NavBarSearch = () => {
 	const handleOnClick = () => {
 		if (name) {
 			dispatch(searchPokemonByName(name))
+			navigate(`/pokemons?name=${name}`)
 			setName('')
 		}
 	}
-	const searchedPokemon = (event) => {
-		if (event) navigate('/pokemons')
-	}
+	// const searchedPokemon = (event) => {
+	// 	if (event)
+	// }
 
 	return (
 		<div>
@@ -33,7 +34,7 @@ const NavBarSearch = () => {
 				onChange={handleChange}
 				required
 			/>
-			<button onClick={(searchedPokemon, handleOnClick)}>Buscar</button>
+			<button onClick={handleOnClick}>Buscar</button>
 		</div>
 	)
 }
