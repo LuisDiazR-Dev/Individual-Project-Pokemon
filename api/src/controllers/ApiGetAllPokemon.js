@@ -32,8 +32,10 @@ const ApiGetAllPokemon = async (req, res) => {
 			return pokemonDetails.filter(details => details !== null)
 			
 	} catch (error) {
+
 		console.error(`Error al obtener la lista de Pokémon: ${error.message}`);
-		throw new Error('Error al obtener la lista de Pokémon');
+		// throw new Error('Error al obtener la lista de Pokémon');
+		return pokemonList = {}
 	}
 };
 

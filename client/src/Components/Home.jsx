@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 
 // ? Components
 import Cards from './Cards'
+import styled from 'styled-components'
+import { SearchFilter } from './SearchFilter'
 
 // ? Actions
 import { getAllPokemons, getTypes } from '../Redux/Action'
@@ -37,19 +39,23 @@ const Home = () => {
 		fetchInitialData()
 	}, [dispatch, allPokemon.length, types.length])
 
+	// ? filtros y ordenamientos
+
 	const displayPokemons = searchedPokemon.length ? searchedPokemon : allPokemon
 
 	if (error) return <div>{error}</div>
 	if (loading)
 		return (
 			<div>
-				<h2>Cargando PequeDex...</h2>
+				<h2>Cargando PokeDex...</h2>
 			</div>
 		)
 
 	return (
 		<div>
-			<h2>Esto es Home y están todos los pokemons</h2>
+			<div>
+				<SearchFilter />
+			</div>
 			<div>
 				<Cards allPokemon={displayPokemons} />
 			</div>

@@ -1,6 +1,5 @@
 const initialState = {
   pokemonList: [],
-  // types: ['Tipo A', 'Tipo B', 'Tipo C'],
   types: [],
   searchedPokemon: []
 }
@@ -27,6 +26,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         types: action.payload
       }
+
     default:
       return state
   }

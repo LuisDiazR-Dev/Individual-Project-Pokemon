@@ -76,6 +76,10 @@ const getTypes = () => {
     } catch (error) {
       console.error('Error buscando tipos de Pokémon:', error)
       window.alert(`Error buscando tipos de Pokémon: ${error.message}`)
+      dispatch({
+        type: 'GET_TYPES',
+        payload: [],
+      })
     }
   }
 }
