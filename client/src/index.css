@@ -37,7 +37,8 @@ body {
 
 button{
   border-radius: 8px;
-	border: 1px solid grey;
+  border-color: #646cff32;
+	/* border: 1px solid grey; */
 	padding: 0.2em 1.5em;
 	margin: 0.2em 0.2em;
 	/* font-size: 1em; */
@@ -50,19 +51,19 @@ button{
 	/* color: rgba(255, 255, 255, 0.87); */
 	/* background-color: #1a1a1a; */
 	/* background-color: #00ABC2; */
-	cursor: pointer;
-	transition: border-color 0.25s;
+	/* cursor: pointer; */
+	/* transition: border-color 0.25s; */
 
 	&:hover {
 		border-color: #646cff;
-		/* border-color: #00ABC2;	 */
+		border-color: #00ABC2;	
 	}
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
 background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
   }
   a:hover {

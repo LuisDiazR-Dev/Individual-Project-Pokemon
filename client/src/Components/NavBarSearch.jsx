@@ -28,7 +28,7 @@ const NavBarSearch = () => {
 	return (
 		<div>
 			<input
-				style={{ height: '1.5rem' }}
+				style={{ height: '1.5rem', outline: 'none' }}
 				type="search"
 				value={name}
 				onChange={handleChange}

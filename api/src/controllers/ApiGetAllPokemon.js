@@ -5,6 +5,7 @@ const getPokemonDetails = async (url) => {
 			const response = await axios.get(url)
 			const data = response.data
 			return {
+				src:false,
 					id: data.id,
 					name: data.name,
 					image: data.sprites.other.dream_world.front_default,
