@@ -4,4 +4,7 @@
   margin: 0 auto;
   padding: 1rem 0;
   text-align: center;
+
+	place-items: center;
+
 }

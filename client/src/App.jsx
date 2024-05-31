@@ -7,6 +7,7 @@ import NavBar from './Components/NavBar.jsx'
 import { Home } from './Components/Home.jsx'
 import Detail from './Components/Detail.jsx'
 import FormAddPokemonDB from './Components/FormAddPokemonDB.jsx'
+import LandingPage from './Components/LandingPage.jsx'
 
 // *
 function App() {
@@ -16,10 +17,10 @@ function App() {
 		<>
 			<div>
 				{/* si es diferente a barra, rendering NavBar */}
-				{/* {pathname !== "/" && <NavBar onSearch={onSearch} />} */}
 				{pathname !== '/' && <NavBar />}
 
 				<Routes>
+					<Route path="/" element={<LandingPage />} />
 					<Route path="/pokemons" element={<Home />} />
 					<Route path="/pokemons/detail/:id" element={<Detail />} />
 					<Route path="/agregar" element={<FormAddPokemonDB />} />

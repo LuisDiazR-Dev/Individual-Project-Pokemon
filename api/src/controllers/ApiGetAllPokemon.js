@@ -23,7 +23,7 @@ const getPokemonDetails = async (url) => {
 const ApiGetAllPokemon = async (req, res) => {
 
 	try {
-			const result = await axios.get('https://pokeapi.co/api/v2/pokemon')
+			const result = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=50')
 			// const pokemonList = result.data.results.slice(0, 20); // Obtener solo los primeros 20
 			const pokemonList = result.data.results
 
