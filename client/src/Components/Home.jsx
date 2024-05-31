@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 // ? Components
 import Cards from './Cards'
 import styled from 'styled-components'
-// import { SearchFilter } from './SearchFilter'
 
 // ? Actions
 import { getAllPokemons, getTypes } from '../Redux/Action'
@@ -25,7 +24,7 @@ const Home = () => {
 				if (!allPokemon.length) {
 					await dispatch(getAllPokemons())
 				}
-				if (types.length) {
+				if (!types.length) {
 					// Verifica si los tipos ya están cargados
 					await dispatch(getTypes())
 				}
@@ -44,6 +43,7 @@ const Home = () => {
 	const [selectedFilter, setSelectedFilter] = useState('all')
 	const [selectedType, setSelectedType] = useState('')
 	const [typeCheckbox, setTypeCheckbox] = useState(false)
+	const [sortOrder, setSortOrder] = useState('asc')
 
 	const handleRadioChange = (event) => {
 		setSelectedFilter(event.target.id)
@@ -59,6 +59,11 @@ const Home = () => {
 	const handleSelectChange = (event) => {
 		setSelectedType(event.target.value)
 	}
+
+	const handleSortChange = (event) => {
+		setSortOrder(event.target.id)
+	}
+
 	//? Auxiliares
 	useEffect(() => {
 		console.log('Checkbox seleccionado:', selectedFilter)
@@ -67,6 +72,10 @@ const Home = () => {
 	useEffect(() => {
 		console.log('Tipo seleccionado:', selectedType)
 	}, [selectedType])
+
+	useEffect(() => {
+		console.log('Orden seleccionado:', sortOrder)
+	}, [sortOrder])
 
 	// ? --------------------------------end filtros y ordenamientos
 
@@ -93,6 +102,18 @@ const Home = () => {
 				return pokemon.types.includes(selectedType)
 			}
 			return true
+		})
+		.sort((a, b) => {
+			if (sortOrder === 'asc') {
+				return a.name.localeCompare(b.name)
+			} else if (sortOrder === 'desc') {
+				return b.name.localeCompare(a.name)
+			} else if (sortOrder === 'max-attack') {
+				return b.attack - a.attack
+			} else if (sortOrder === 'min-attack') {
+				return a.attack - b.attack
+			}
+			return 0
 		})
 
 	if (error) return <div>{error}</div>
@@ -178,13 +199,45 @@ const Home = () => {
 						<span>
 							<label>
 								Asd
-								<input type="radio" id="asd" checked={''} onChange={''} />
+								<input
+									type="radio"
+									id="asc"
+									checked={sortOrder === 'asc'}
+									onChange={handleSortChange}
+								/>
 							</label>
 						</span>
 						<span>
 							<label>
 								Desc
-								<input type="radio" id="desc" checked={''} onChange={''} />
+								<input
+									type="radio"
+									id="desc"
+									checked={sortOrder === 'desc'}
+									onChange={handleSortChange}
+								/>
+							</label>
+						</span>
+						<span>
+							<label>
+								+Atc
+								<input
+									type="radio"
+									id="max-attack"
+									checked={sortOrder === 'max-attack'}
+									onChange={handleSortChange}
+								/>
+							</label>
+						</span>
+						<span>
+							<label>
+								-Atc
+								<input
+									type="radio"
+									id="min-attack"
+									checked={sortOrder === 'min-attack'}
+									onChange={handleSortChange}
+								/>
 							</label>
 						</span>
 					</div>

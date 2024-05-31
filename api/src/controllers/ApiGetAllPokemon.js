@@ -9,6 +9,7 @@ const getPokemonDetails = async (url) => {
 					id: data.id,
 					name: data.name,
 					image: data.sprites.other.dream_world.front_default,
+					attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
 					types: data.types.map(typeInfo => typeInfo.type.name),
 			}
 	} catch (error) {
