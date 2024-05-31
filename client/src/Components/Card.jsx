@@ -60,6 +60,8 @@ const CardDiv = styled.div`
 		width: 256px;
 		height: 200px;
 		padding: 12px 0;
+		aspect-ratio: 1/1;
+		aspect-ratio: 4 / 3;
 	}
 	span {
 		padding: 0 12px;

@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 
 // ? Components
-import Cards from './Cards'
 import styled from 'styled-components'
+import Cards from './Cards'
+import Pagination from './pagination'
 
 // ? Actions
 import { getAllPokemons, getTypes } from '../Redux/Action'
@@ -34,7 +35,6 @@ const Home = () => {
 				setLoading(false)
 			}
 		}
-
 		fetchInitialData()
 	}, [dispatch, allPokemon.length, types.length])
 
@@ -82,6 +82,12 @@ const Home = () => {
 	const displayPokemons = searchedPokemon.length ? searchedPokemon : allPokemon
 	console.log(displayPokemons)
 
+	// ? pagination
+	const [pokemonsPerPage, setPokemonsPerPage] = useState(12)
+	const [currentPage, setCurrentPage] = useState(1)
+	const lastIndex = currentPage * pokemonsPerPage
+	const firstIndex = lastIndex - pokemonsPerPage
+
 	// ? filtros y ordenamientos ()
 
 	const filteredPokemons = displayPokemons
@@ -116,6 +122,11 @@ const Home = () => {
 			return 0
 		})
 
+	// ? pagination
+	const totalPokemons = filteredPokemons.length
+	const pageOfPokemons = filteredPokemons.slice(firstIndex, lastIndex)
+
+	// ? render
 	if (error) return <div>{error}</div>
 	if (loading)
 		return (
@@ -123,7 +134,6 @@ const Home = () => {
 				<h2>Cargando PokeDex...</h2>
 			</div>
 		)
-
 	return (
 		<div>
 			<DivStyled className="filters">
@@ -177,11 +187,7 @@ const Home = () => {
 								/>
 							</label>
 							{typeCheckbox && (
-								<select
-									name="types"
-									value={selectedType}
-									onChange={handleSelectChange}
-								>
+								<select name="types" value={selectedType} onChange={handleSelectChange}>
 									<option value="">Seleccione un tipo</option>
 									{types.map((type) => (
 										<option key={type.id} value={type.name}>
@@ -245,7 +251,16 @@ const Home = () => {
 			</DivStyled>
 
 			<div>
-				<Cards allPokemon={filteredPokemons} />
+				<Cards allPokemon={pageOfPokemons} />
+			</div>
+
+			<div>
+				<Pagination
+					totalPokemons={totalPokemons}
+					pokemonsPerPage={pokemonsPerPage}
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+				/>
 			</div>
 		</div>
 	)
