@@ -1,7 +1,9 @@
 const initialState = {
   pokemonList: [],
   types: [],
-  searchedPokemon: []
+  searchedPokemon: [],
+  validationMessage: '',
+  error: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -21,12 +23,31 @@ const reducer = (state = initialState, action) => {
         ...state,
         searchedPokemon: [], // Reiniciar el estado de searchedPokemon
       }
-      case 'GET_TYPES':
+    case 'GET_TYPES':
       return {
         ...state,
         types: action.payload
       }
+    case 'VALIDATE_NAME_SUCCESS':
+      return {
+        ...state,
+        validationMessage: action.payload,
+        error: '' 
+      }
 
+    case 'VALIDATE_NAME_FAILURE':
+      return {
+        ...state,
+        validationMessage: '',
+        error: action.payload
+      }
+
+    case 'CLEAR_MESSAGE':
+        return {
+          ...state,
+         validationMessage: '', // Reiniciar el estado de searchedPokemon
+        }
+      
     default:
       return state
   }

@@ -84,6 +84,24 @@ const getTypes = () => {
   }
 }
 
+// ? validation exist pokemon
+const validatePokemonName = (name) => async (dispatch) => {
+  try {
+      const response = await axios.get(`http://localhost:3001/check/${name}`);
+      dispatch({ type: 'VALIDATE_NAME_SUCCESS', payload: response.data.message });
+  } catch (error) {
+      dispatch({ type: 'VALIDATE_NAME_FAILURE', payload: error.message });
+  }
+};
+
+// ? clear validation message
+const clearValidationMessage = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CLEAR_MESSAGE',
+    });
+  };
+};
 
 
-export { getAllPokemons, searchPokemonById, searchPokemonByName, clearSearch, getTypes  }
+export { getAllPokemons, searchPokemonById, searchPokemonByName, clearSearch, getTypes, validatePokemonName, clearValidationMessage  }

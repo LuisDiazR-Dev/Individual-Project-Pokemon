@@ -3,11 +3,23 @@ import styled from 'styled-components'
 
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getTypes, getAllPokemons } from '../Redux/Action'
+import { getTypes, validatePokemonName, clearValidationMessage } from '../Redux/Action'
 
 const AddPokemonForm = () => {
 	const dispatch = useDispatch()
 	const allTypes = useSelector((state) => state.types)
+
+	const [name, setName] = useState('')
+	const validationMessage = useSelector((state) => state.validationMessage)
+	const error = useSelector((state) => state.error)
+
+	const handleValidateName = async () => {
+		try {
+			await dispatch(validatePokemonName(name))
+		} catch (err) {
+			console.error('Validation error:', err)
+		}
+	}
 
 	useEffect(() => {
 		dispatch(getTypes())
@@ -30,10 +42,14 @@ const AddPokemonForm = () => {
 	const [isOtherType, setIsOtherType] = useState(false)
 
 	const handleChange = (event) => {
+		const { name, value } = event.target
 		setFormData({
 			...formData,
-			[event.target.name]: event.target.value,
+			[name]: value,
 		})
+		if (name === 'name') {
+			setName(value)
+		}
 	}
 
 	const handleRandomValue = (field, min, max) => {
@@ -60,17 +76,6 @@ const AddPokemonForm = () => {
 		setSelectedTypes(selectedTypes.filter((value) => value !== type))
 	}
 
-	// const handleImageUpload = (event) => {
-	// 	const file = event.target.files[0]
-	// 	if (file) {
-	// 		const reader = new FileReader()
-	// 		reader.onloadend = () => {
-	// 			setFormData({ ...formData, image: reader.result })
-	// 		}
-	// 		reader.readAsDataURL(file)
-	// 	}
-	// }
-
 	const validateForm = () => {
 		const urlPattern = new RegExp(
 			'^(https?:\\/\\/)?' + // protocolo
@@ -82,8 +87,8 @@ const AddPokemonForm = () => {
 			'i'
 		)
 
-		if (!formData.name || /\d/.test(formData.name)) {
-			alert('El nombre no puede contener números y es obligatorio.')
+		if (!formData.name || /\d/.test(formData.name) || formData.name.length > 20) {
+			alert('El nombre no puede contener números, es obligatorio y no mas de 20 caracteres.')
 			return false
 		}
 
@@ -92,8 +97,8 @@ const AddPokemonForm = () => {
 			return false
 		}
 
-		if (isNaN(formData.hp) || formData.hp <= 0) {
-			alert('Por favor ingresa un valor válido para HP.')
+		if (isNaN(formData.hp) || formData.hp <= 0 || formData.hp > 100) {
+			alert('Por favor ingresa un valor válido entre 20 y 100 para HP.')
 			return false
 		}
 
@@ -111,13 +116,27 @@ const AddPokemonForm = () => {
 			alert('La defensa no puede exceder 100.')
 			return false
 		}
+		if (
+			validationMessage == 'El Pokémon ya existe en la base de datos' ||
+			validationMessage == 'El Pokémon ya existe en la API externa'
+		) {
+			alert('Ya tienes este pokemon')
+			return false
+		}
 
 		return true
 	}
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault()
-		dispatch(getAllPokemons())
+		await handleValidateName()
+
+		// Si hay un error, no continuar con el envío del formulario
+		if (error === 'El Pokémon ya existe en la base de datos') {
+			alert('Ya posees un Pokemon con ese nombre')
+			return
+		}
+
 		const isValid = validateForm()
 		if (!isValid) return
 
@@ -128,39 +147,42 @@ const AddPokemonForm = () => {
 		// Verificar los datos antes de enviar
 		console.log('Data to submit:', dataToSubmit)
 
-		axios
-			.post('http://localhost:3001/agregar', dataToSubmit)
-			.then((response) => {
-				console.log('Pokemon added:', response.data)
-				window.alert(`${formData.name} agregado a la Base de Datos`)
+		// axios
+		// 	.post('http://localhost:3001/agregar', dataToSubmit, {
+		// 		headers: {
+		// 			'Content-Type': 'application/json',
+		// 		},
+		// 	})
+		// 	.then((response) => {
+		// 		console.log('Pokemon added:', response.data)
+		// 		window.alert(`${formData.name} agregado a la Base de Datos`)
 
-				// axios
-				// 	.post('http://localhost:3001/agregar', dataToSubmit, {
-				// 		headers: {
-				// 			'Content-Type': 'application/json',
-				// 		},
-				// 	})
-				// 	.then((response) => {
-				// 		console.log('Pokemon added:', response.data)
-				// 		window.alert(`${formData.name} agregado a la Base de Datos`)
+		// Reset form
 
-				// Reset form
-				setFormData({
-					name: '',
-					image: '',
-					hp: '',
-					attack: '',
-					defense: '',
-					speed: 5,
-					height: 5,
-					weight: 5,
-					types: [],
-					newType: '',
-				})
-				setSelectedTypes([])
-				setIsOtherType(false)
+		try {
+			const response = await axios.post('http://localhost:3001/agregar', dataToSubmit)
+			console.log('Pokemon added:', response.data)
+			window.alert(`${formData.name} agregado a la Base de Datos`)
+
+			// Reset form
+			setFormData({
+				name: '',
+				image: '',
+				hp: '',
+				attack: '',
+				defense: '',
+				speed: 5,
+				height: 5,
+				weight: 5,
+				types: [],
+				newType: '',
 			})
-			.catch((error) => console.error('Error adding Pokemon:', error))
+			setSelectedTypes([])
+			setIsOtherType(false)
+			dispatch(clearValidationMessage())
+		} catch (error) {
+			console.error('Error adding Pokemon:', error)
+		}
 	}
 
 	return (
@@ -170,62 +192,36 @@ const AddPokemonForm = () => {
 			</div>
 			<div>
 				<label>Nombre</label>
-				<input
-					type="text"
-					name="name"
-					value={formData.name}
-					onChange={handleChange}
-				/>
+				<input type="text" name="name" value={formData.name} onChange={handleChange} />
+				<button type="button" onClick={handleValidateName}>
+					Validar
+				</button>
+				{validationMessage && <p>{validationMessage}</p>}
+				{error && <p>Error: {error}</p>}
 			</div>
 			<div>
 				<label>URL de la imagen</label>
-				<input
-					type="text"
-					name="image"
-					value={formData.image}
-					onChange={handleChange}
-				/>
+				<input type="text" name="image" value={formData.image} onChange={handleChange} />
 				{/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
 			</div>
 			<div>
 				<label>Vida</label>
-				<input
-					type="number"
-					name="hp"
-					value={formData.hp}
-					onChange={handleChange}
-				/>
+				<input type="number" name="hp" value={formData.hp} onChange={handleChange} />
 				<button type="button" onClick={() => handleRandomValue('hp', 20, 100)}>
 					Random
 				</button>
 			</div>
 			<div>
 				<label>Ataque</label>
-				<input
-					type="number"
-					name="attack"
-					value={formData.attack}
-					onChange={handleChange}
-				/>
-				<button
-					type="button"
-					onClick={() => handleRandomValue('attack', 20, 100)}
-				>
+				<input type="number" name="attack" value={formData.attack} onChange={handleChange} />
+				<button type="button" onClick={() => handleRandomValue('attack', 20, 100)}>
 					Random
 				</button>
 			</div>
 			<div>
 				<label>Defensa</label>
-				<input
-					type="number"
-					name="defense"
-					value={formData.defense}
-					onChange={handleChange}
-				/>
-				<button
-					type="button"
-					onClick={() => handleRandomValue('defense', 20, 100)}
-				>
+				<input type="number" name="defense" value={formData.defense} onChange={handleChange} />
+				<button type="button" onClick={() => handleRandomValue('defense', 20, 100)}>
 					Random
 				</button>
 			</div>
@@ -251,10 +247,7 @@ const AddPokemonForm = () => {
 					value={formData.height}
 					onChange={handleChange}
 				/>
-				<button
-					type="button"
-					onClick={() => handleRandomValue('height', 1, 10)}
-				>
+				<button type="button" onClick={() => handleRandomValue('height', 1, 10)}>
 					Random
 				</button>
 			</div>
@@ -267,10 +260,7 @@ const AddPokemonForm = () => {
 					value={formData.weight}
 					onChange={handleChange}
 				/>
-				<button
-					type="button"
-					onClick={() => handleRandomValue('weight', 1, 10)}
-				>
+				<button type="button" onClick={() => handleRandomValue('weight', 1, 10)}>
 					Random
 				</button>
 			</div>
@@ -311,11 +301,7 @@ const AddPokemonForm = () => {
 				{selectedTypes.map((type) => (
 					<div key={type}>
 						<span className="itemType">{type}</span>
-						<button
-							className="remove"
-							type="button"
-							onClick={() => handleRemoveType(type)}
-						>
+						<button className="remove" type="button" onClick={() => handleRemoveType(type)}>
 							❌
 						</button>
 					</div>
