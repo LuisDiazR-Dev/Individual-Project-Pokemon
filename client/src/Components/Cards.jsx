@@ -31,6 +31,8 @@ export default Cards
 // ? Styles
 const CardsDiv = styled.section`
 	display: flex;
+	justify-content: center;
+	align-items: start;
 	flex-wrap: wrap;
 `
 

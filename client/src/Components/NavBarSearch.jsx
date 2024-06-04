@@ -14,9 +14,9 @@ const NavBarSearch = () => {
 		setName(event.target.value.toLowerCase())
 	}
 
-	const handleOnClick = () => {
+	const handleOnClick = async () => {
 		if (name) {
-			dispatch(searchPokemonByName(name))
+			await dispatch(searchPokemonByName(name))
 			navigate(`/pokemons?name=${name}`)
 			setName('')
 		}

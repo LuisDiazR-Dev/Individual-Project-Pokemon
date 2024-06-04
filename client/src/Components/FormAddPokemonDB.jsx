@@ -3,23 +3,17 @@ import styled from 'styled-components'
 
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getTypes, validatePokemonName, clearValidationMessage } from '../Redux/Action'
+import { getTypes, getAllPokemons } from '../Redux/Action'
 
 const AddPokemonForm = () => {
 	const dispatch = useDispatch()
+
 	const allTypes = useSelector((state) => state.types)
 
-	const [name, setName] = useState('')
-	const validationMessage = useSelector((state) => state.validationMessage)
-	const error = useSelector((state) => state.error)
+	const [inputError, setInputError] = useState(false)
 
-	const handleValidateName = async () => {
-		try {
-			await dispatch(validatePokemonName(name))
-		} catch (err) {
-			console.error('Validation error:', err)
-		}
-	}
+	const [selectedTypes, setSelectedTypes] = useState([])
+	const [isOtherType, setIsOtherType] = useState(false)
 
 	useEffect(() => {
 		dispatch(getTypes())
@@ -38,8 +32,15 @@ const AddPokemonForm = () => {
 		newType: '',
 	})
 
-	const [selectedTypes, setSelectedTypes] = useState([])
-	const [isOtherType, setIsOtherType] = useState(false)
+	const [isComplete, setIsComplete] = useState(false)
+	useEffect(() => {
+		const { name, hp, attack, defense, speed, height, weight } = formData
+		if (name && hp && attack && defense && speed && height && weight) {
+			setIsComplete(true)
+		} else {
+			setIsComplete(false)
+		}
+	}, [formData])
 
 	const handleChange = (event) => {
 		const { name, value } = event.target
@@ -48,7 +49,7 @@ const AddPokemonForm = () => {
 			[name]: value,
 		})
 		if (name === 'name') {
-			setName(value)
+			setInputError(false)
 		}
 	}
 
@@ -88,6 +89,7 @@ const AddPokemonForm = () => {
 		)
 
 		if (!formData.name || /\d/.test(formData.name) || formData.name.length > 20) {
+			setInputError(true)
 			alert('El nombre no puede contener números, es obligatorio y no mas de 20 caracteres.')
 			return false
 		}
@@ -116,11 +118,9 @@ const AddPokemonForm = () => {
 			alert('La defensa no puede exceder 100.')
 			return false
 		}
-		if (
-			validationMessage == 'El Pokémon ya existe en la base de datos' ||
-			validationMessage == 'El Pokémon ya existe en la API externa'
-		) {
-			alert('Ya tienes este pokemon')
+		if (selectedTypes.length === 0) {
+			alert('Por favor selecciona al menos un tipo.')
+
 			return false
 		}
 
@@ -129,16 +129,25 @@ const AddPokemonForm = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault()
-		await handleValidateName()
 
-		// Si hay un error, no continuar con el envío del formulario
-		if (error === 'El Pokémon ya existe en la base de datos') {
-			alert('Ya posees un Pokemon con ese nombre')
-			return
-		}
-
+		// Validar el formulario
 		const isValid = validateForm()
 		if (!isValid) return
+
+		// Verificar si el Pokémon ya existe
+		try {
+			const nameExistsResponse = await axios.get(
+				`http://localhost:3001/check/${formData.name.toLowerCase()}`
+			)
+			if (nameExistsResponse.data) {
+				alert('El Pokémon ya existe con ese nombre.')
+				return
+			}
+		} catch (error) {
+			console.error('Error checking Pokemon name:', error)
+			alert('Hubo un error al verificar el nombre del Pokémon.')
+			return
+		}
 
 		const dataToSubmit = {
 			...formData,
@@ -146,18 +155,6 @@ const AddPokemonForm = () => {
 		}
 		// Verificar los datos antes de enviar
 		console.log('Data to submit:', dataToSubmit)
-
-		// axios
-		// 	.post('http://localhost:3001/agregar', dataToSubmit, {
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 		},
-		// 	})
-		// 	.then((response) => {
-		// 		console.log('Pokemon added:', response.data)
-		// 		window.alert(`${formData.name} agregado a la Base de Datos`)
-
-		// Reset form
 
 		try {
 			const response = await axios.post('http://localhost:3001/agregar', dataToSubmit)
@@ -179,7 +176,7 @@ const AddPokemonForm = () => {
 			})
 			setSelectedTypes([])
 			setIsOtherType(false)
-			dispatch(clearValidationMessage())
+			dispatch(getAllPokemons())
 		} catch (error) {
 			console.error('Error adding Pokemon:', error)
 		}
@@ -190,15 +187,18 @@ const AddPokemonForm = () => {
 			<div>
 				<h2>Agrega Nuevo Pokemon</h2>
 			</div>
+
 			<div>
 				<label>Nombre</label>
-				<input type="text" name="name" value={formData.name} onChange={handleChange} />
-				<button type="button" onClick={handleValidateName}>
-					Validar
-				</button>
-				{validationMessage && <p>{validationMessage}</p>}
-				{/* {error && <p>Error: {error}</p>} */}
+				<input
+					className={inputError ? 'error' : ''}
+					type="text"
+					name="name"
+					value={formData.name}
+					onChange={handleChange}
+				/>
 			</div>
+
 			<div>
 				<label>URL de la imagen</label>
 				<input type="text" name="image" value={formData.image} onChange={handleChange} />
@@ -264,10 +264,11 @@ const AddPokemonForm = () => {
 					Random
 				</button>
 			</div>
+
 			<div className="tipos">
 				<label>Tipos</label>
 				<select name="types" onChange={handleSelectType}>
-					<option value="">Seleccione un tipo</option>
+					<option value="default">Seleccione un tipo</option>
 					{allTypes.map((type) => (
 						<option key={type.id} value={type.name}>
 							{type.name}
@@ -307,7 +308,8 @@ const AddPokemonForm = () => {
 					</div>
 				))}
 			</div>
-			<button className="submit" type="submit">
+
+			<button disabled={!isComplete} className="submit" type="submit">
 				Crear Pokémon
 			</button>
 		</FormStyled>
@@ -393,5 +395,8 @@ const FormStyled = styled.form`
 	.itemType {
 		padding: 24px 0;
 		margin: 24px 0;
+	}
+	.error {
+		border: 1px solid #ff0000a9;
 	}
 `

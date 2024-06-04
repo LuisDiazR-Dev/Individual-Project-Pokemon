@@ -18,8 +18,8 @@ const NavBar = () => {
 	// * reiniciar Home
 	const dispatch = useDispatch()
 
-	const clearSearchHandler = () => {
-		dispatch(clearSearch())
+	const clearSearchHandler = async () => {
+		await dispatch(clearSearch())
 	}
 
 	return (

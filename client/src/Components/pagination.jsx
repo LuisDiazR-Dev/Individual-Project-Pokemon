@@ -60,6 +60,7 @@ const NavPagination = styled.nav`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-top: 2rem;
 
 	.list-pages {
 		display: flex;
