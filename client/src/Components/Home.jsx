@@ -36,7 +36,7 @@ const Home = () => {
 			}
 		}
 		fetchInitialData()
-	}, [dispatch, allPokemon.length, types.length])
+	}, [dispatch, allPokemon.length, types.length, allPokemon, types])
 
 	// ? filtros y ordenamientos
 
@@ -58,6 +58,8 @@ const Home = () => {
 
 	const handleSelectChange = (event) => {
 		setSelectedType(event.target.value)
+		//todo  volver a 1 cuando types tenga un valor seleccionado
+		setCurrentPage(1)
 	}
 
 	const handleSortChange = (event) => {
@@ -254,6 +256,12 @@ const Home = () => {
 				<Cards allPokemon={pageOfPokemons} />
 			</div>
 
+			{pageOfPokemons.length === 0 && (
+				<DivAlert>
+					<span>No hya Registros de pokemons del tipo seleccionado en la API o DB</span>
+				</DivAlert>
+			)}
+
 			<div>
 				<Pagination
 					totalPokemons={totalPokemons}
@@ -278,11 +286,32 @@ const DivStyled = styled.div`
 	margin: 12px auto;
 	height: 58px;
 	font-weight: 600;
+
 	span {
 		padding: 0 12px;
 	}
 
 	.type-list {
 		margin-top: 10px;
+	}
+`
+
+const DivAlert = styled.div`
+	display: flex;
+	align-items: center;
+	border: 1px solid #fafafa48;
+	background-color: #00000047;
+	border-radius: 20px;
+
+	width: 50%;
+	height: 50vh;
+
+	margin: 12px auto;
+	font-weight: 600;
+
+	span {
+		padding: 0 12px;
+		/* margin: auto;
+		width: 50%; */
 	}
 `

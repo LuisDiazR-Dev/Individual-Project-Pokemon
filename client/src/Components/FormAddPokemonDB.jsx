@@ -98,7 +98,7 @@ const AddPokemonForm = () => {
 		}
 
 		if (isNaN(formData.hp) || formData.hp <= 0 || formData.hp > 100) {
-			alert('Por favor ingresa un valor válido entre 20 y 100 para HP.')
+			alert('Por favor ingresa un valor válido entre 20 y 100 para Vida.')
 			return false
 		}
 
@@ -197,7 +197,7 @@ const AddPokemonForm = () => {
 					Validar
 				</button>
 				{validationMessage && <p>{validationMessage}</p>}
-				{error && <p>Error: {error}</p>}
+				{/* {error && <p>Error: {error}</p>} */}
 			</div>
 			<div>
 				<label>URL de la imagen</label>
